@@ -1,63 +1,118 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liquid Zero - NFT Liquidity Pool for Aleph Zero</title>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Liquid Zero - NFT Liquidity Pool for Aleph Zero</title>
 
-	<!-- https://fonts.google.com/specimen/Righteous?preview.text=hello%20here&preview.text_type=custom&query=right -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+		<!-- https://fonts.google.com/specimen/Righteous?preview.text=hello%20here&preview.text_type=custom&query=right -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
 
-	<!-- https://tailwindcss.com/docs/installation/play-cdn -->
-	<script src="https://cdn.tailwindcss.com"></script>
+		<!-- https://tailwindcss.com/docs/installation/play-cdn -->
+		<script src="https://cdn.tailwindcss.com"></script>
 
 
-  <style>
-    html body {
-      font-family: 'Righteous', cursive;
-      background-color: #0E0E0E;
-      color: #FFFFFF;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-      text-rendering: geometricPrecision;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-  </style>
-</head>
+		<style>
+			html body {
+				font-family: 'Righteous', cursive;
+				background-color: #0E0E0E;
+				color: #FFFFFF;
+				box-sizing: border-box;
+				scroll-behavior: smooth;
+				text-rendering: geometricPrecision;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
 
-<body>
-  <header>
-    <div>Liquid Zero</h1>
-	<div>NFT Liquidity Pool for Aleph Zero</div>
-  </header>
+			.txtAppTitle {
+				font-size: 50px;
+			}
 
-  <div class="flex flex-row">
-	<div class="basis-1/3"></div>
-	<div class="basis-2/3">
-		<div>Trade, Create NFT Index, Customize your own Liquidity Pool</div>
-		<div>Marketplace contains 9999 Robot dogs and 9999 rainbow cats to provide high volume for experienced trader to buy and sell NFT.</div>
-		<div>Deploy the smart contract on Aleph Zero blockchain to reduce gas fees</div>
-	</div>
-  </div>
+			.txtAppSubTitle {
+				font-size: 25px;
+			}
 
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-  <script>
-    const provider = new ethers.providers.Web3Provider(
-      window.ethereum,
-      "ropsten"
-    );
+			.txtHero {
+				color: #00FF0A;
+				font-size: 70px;
+				line-height: 80px;
+			}
 
-    const ContractAddress = "<CONTRACT_ADDRESS>";
-    const ContractABI = "<CONTRACT_ABI eg. [{},{}]>"
+			.txtDetail {
+				color: #00FF0A;
+				font-size: 18px;
+				max-width: 500px;
+			}
 
-    let Contract;
-    let signer;
+			.imgHero {
+				min-width: 100%;
+				max-width: 100%;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<div class="my-4 mx-16">
+			<div class="txtAppTitle">Liquid Zero</div>
+			<div class="txtAppSubTitle">NFT Liquidity Pool for Aleph Zero</div>
+		</div>
+
+		<div class="my-12 mr-4 flex flex-row">
+			<div class="basis-2/4 mr-12"><img class="imgHero" src="img/robot_cat_1.jpeg" alt=""></div>
+			<div class="basis-2/4 ml-12">
+				<div class="txtHero mb-12">Trade,<br /> Create NFT Index,<br /> Customize your own Liquidity Pool</div>
+				<div class="txtDetail my-8">Marketplace contains 9999 Robot dogs and 9999 rainbow cats to provide high volume for experienced trader to buy and sell NFT.</div>
+				<div class="txtDetail my-8">Deploy the smart contract on Aleph Zero blockchain to reduce gas fees</div>
+			</div>
+		</div>
+
+		<div class="mt-12 flex flex-row">
+			<div class="">
+				<div>Yesterday Exchange Rate</div>
+				<div>1 Robot Dog</div>
+				<div>equals</div>
+				<div>2 Rainbow Cat</div>
+			</div>
+			<div>
+				<div>Today Exchange Rate</div>
+				<div>1 Robot Dog</div>
+				<div>equals</div>
+				<div>1 Rainbow Cat</div>
+			</div>
+		</div>
+
+		<div>
+			<div>
+				<div>Yesterday Exchange Rate</div>
+				<div>1 Robot Dog</div>
+				<div>equals</div>
+				<div>5 Aleph Zero (AZERO)</div>
+			</div>
+			<div>
+				<div>Today Exchange Rate</div>
+				<div>1 Robot Dog</div>
+				<div>equals</div>
+				<div>7 Aleph Zero (AZERO)</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+		<script>
+			const provider = new ethers.providers.Web3Provider(
+				window.ethereum,
+				"ropsten"
+			);
+
+			const ContractAddress = "<CONTRACT_ADDRESS>";
+			const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
+
+			let Contract;
+			let signer;
 
     // provider.send("eth_requestAccounts", []).then(() => {
     //   provider.listAccounts().then(function (accounts) {
@@ -69,7 +124,7 @@
     //     );
     //   });
     // });
-  </script>
-</body>
+		</script>
+	</body>
 
 </html>
