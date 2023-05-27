@@ -15,7 +15,7 @@
 		<!-- https://tailwindcss.com/docs/installation/play-cdn -->
 		<script src="https://cdn.tailwindcss.com"></script>
 
-		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+		<script src="https://cdn.jsdelivr.net/npm/web3@1.5.3/dist/web3.min.js"></script>
 
 		<style>
 			html body {
@@ -133,7 +133,7 @@
 
 		<div class="my-20 flex flex-col items-center">
 			<div class="titleBig">How to get start trading?</div>
-			<div><button class="btn px-12 py-4 text-lg">Connect your wallet</button></div>
+			<div><button id="connectButton" class="btn px-12 py-4 text-lg">Connect your wallet</button></div>
 		</div>
 
 		<div class="mx-16 py-12">
@@ -233,12 +233,12 @@
 		<div class="flex flex-row justify-center my-12">
 			<div class="text-center">
 				<div class="txtBlock">105 robot dogs (735 AZERO)</div>
-				<div><button class="btn my-2 px-16 py-2 text-lg">Buy All</button></div>
+				<div><button id="actionButton" class="btn my-2 px-16 py-2 text-lg">Buy All</button></div>
 			</div>
 			<div class="text-8xl mx-16">Or</div>
 			<div class="text-center">
 				<div class="txtBlock">105 ranbow cats (735 AZERO)</div>
-				<div><button class="btn my-2 px-16 py-2 text-lg">Buy All</button></div>
+				<div><button id="actionButtonAll" class="btn my-2 px-16 py-2 text-lg">Buy All</button></div>
 			</div>
 		</div>
 
@@ -286,39 +286,51 @@
 
 
 		<script>
-			const provider = new ethers.providers.Web3Provider(
-				window.ethereum,
-				"ropsten"
-			);
 
-			const ContractAddress = "<CONTRACT_ADDRESS>";
+			const ContractAddress = "5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF65HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6";
 			const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
 
 			let Contract;
 			let signer;
 
-    // provider.send("eth_requestAccounts", []).then(() => {
-    //   provider.listAccounts().then(function (accounts) {
-    //     signer = provider.getSigner(accounts[0]);
-    //     Contract = new ethers.Contract(
-    //       ContractAddress,
-    //       ContractABI,
-    //       signer
-    //     );
-    //   });
-    // });
+			const button = document.getElementById( 'connectButton' );
 
-		const getJSON = async function(url)  {
-			try {
-				const res = await fetch(url);
-				if(!res.ok) throw new Error ('Unable to fetch data')
-				const data = await res.json();
-				return data;
-				
-			} catch (error) {
-				console.error(error.message);
+			button.addEventListener( 'click', () =>
+			{
+				if ( window.ethereum )
+				{
+					window.web3 = new Web3( window.ethereum );
+					window.ethereum.enable()
+						.then( ( accounts ) =>
+						{
+							const account = accounts[ 0 ];
+							button.disabled = true;
+							console.log( "Connected to account " + account );
+						} )
+						.catch( ( error ) =>
+						{
+							console.error( error );
+						} );
+				} else
+				{
+					console.log( 'Non browser detected. Consider installing MetaMask!' );
+				}
+			} );
+
+		</script>
+
+		<script>
+			const getJSON = async function(url)  {
+				try {
+					const res = await fetch(url);
+					if(!res.ok) throw new Error ('Unable to fetch data')
+					const data = await res.json();
+					return data;
+
+				} catch (error) {
+					console.error(error.message);
+				}
 			}
-		}
 		</script>
 	</body>
 
