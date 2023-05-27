@@ -294,6 +294,33 @@
     let signer;
 
     const button = document.getElementById('connectButton');
+		const buttons = document.querySelectorAll('.btn');
+
+		function disableButtons() {
+			buttons.forEach(button => {
+				if (button.innerText === "Trade" || button.innerText === "Buy All") {
+					button.disabled = true;
+				}
+			});
+		}
+
+		function enableButtons() {
+			buttons.forEach(button => {
+				if (button.innerText === "Trade" || button.innerText === "Buy All") {
+					button.disabled = false;
+				}
+			})
+		}
+
+		ethereum.request({ method: 'eth_requestAccounts' })
+		.then(account => {
+				const shortAddress = account[0].slice(0, 6) + "..." + account[0].slice(-4);
+			button.innerText = shortAddress;
+			enableButtons();
+		})
+		.catch(() => {
+			disableButtons()
+		});
 
     button.addEventListener('click', () => {
       if (window.ethereum) {
@@ -301,7 +328,6 @@
         window.ethereum.enable()
           .then((accounts) => {
             const account = accounts[0];
-            button.disabled = true;
             console.log("Connected to account " + account);
           })
           .catch((error) => {
@@ -309,6 +335,7 @@
           });
       } else {
         console.log('Non browser detected. Consider installing MetaMask!');
+				disableButtons();
       }
     });
 
