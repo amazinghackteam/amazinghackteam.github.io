@@ -15,6 +15,7 @@
 		<!-- https://tailwindcss.com/docs/installation/play-cdn -->
 		<script src="https://cdn.tailwindcss.com"></script>
 
+		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 
 		<style>
 			html body {
@@ -65,13 +66,20 @@
 			.titleSmall {
 				font-size: 25px;
 			}
+
 			.titleBig {
 				font-size: 70px;
 			}
 
+			.txtBlock {
+				font-size: 20px;
+				line-height: 35px;
+				color: #FFFFFF;
+			}
+
 			.btn {
 				background: #00FF0A;
-				border-radius: 25px;
+				border-radius: 10px;
 				color: #000000;
 			}
 
@@ -128,23 +136,73 @@
 			<div><button class="btn px-12 py-4 text-lg">Connect your wallet</button></div>
 		</div>
 
-		<div>
-			<div>Robot Dogs For Sell</div>
-			<div>
-				Remain 9924 Robot Dogs on pool<br/>
+		<div class="mx-16 py-12">
+			<div class="titleBig mb-4">Robot Dogs For Sell</div>
+			<div class="txtBlock">
+				Remain 9924 Robot Dogs on pool<br />
 				Floor price is 20 AZERO<br />
 				Total Volume traded is 12.3K AZERO<br />
 				23 Wallets bought Robot Dogs NTF<br />
 			</div>
 		</div>
 
-		<div>
-			<div>
-				<div><img src="" alt=""></div>
+		<div class="mx-4 flex flex-row">
+			<div class="mr-12 text-center">
+				<div class="mb-4"><img src="img/robot_dog_2.png" alt=""></div>
+				<div class="txtBlock">21 cats (147 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+			<div class="mr-12 text-center">
+				<div class="mb-4"><img src="img/robot_dog_3.png" alt=""></div>
+				<div class="txtBlock">5 cats (35 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+			<div class="mr-12 text-center">
+				<div class="mb-4"><img src="img/robot_dog_2.png" alt=""></div>
+				<div class="txtBlock">21 cats (147 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+			<div class="text-center">
+				<div class="mb-4"><img src="img/robot_dog_3.png" alt=""></div>
+				<div class="txtBlock">5 cats (35 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
 			</div>
 		</div>
 
-		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+		<div class="mx-16 py-12">
+			<div class="titleBig mb-4">Robot Dogs For Sell</div>
+			<div class="txtBlock">
+				Remain 9924 Robot Dogs on pool<br />
+				Floor price is 20 AZERO<br />
+				Total Volume traded is 12.3K AZERO<br />
+				23 Wallets bought Robot Dogs NTF<br />
+			</div>
+		</div>
+
+		<div class="mx-4 flex flex-row">
+			<div class="mr-12 text-center">
+				<div class="mb-4"><img src="img/robot_dog_2.png" alt=""></div>
+				<div class="txtBlock">21 cats (147 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+			<div class="mr-12 text-center">
+				<div class="mb-4"><img src="img/robot_dog_3.png" alt=""></div>
+				<div class="txtBlock">5 cats (35 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+			<div class="mr-12 text-center">
+				<div class="mb-4"><img src="img/robot_dog_2.png" alt=""></div>
+				<div class="txtBlock">21 cats (147 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+			<div class="text-center">
+				<div class="mb-4"><img src="img/robot_dog_3.png" alt=""></div>
+				<div class="txtBlock">5 cats (35 AZERO)</div>
+				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+			</div>
+		</div>
+
+
 		<script>
 			const provider = new ethers.providers.Web3Provider(
 				window.ethereum,
