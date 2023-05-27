@@ -136,19 +136,21 @@ async function main ()
 	// 		storageDepositLimit,
 	// 	}
 	// );
-   
-	// await contract.tx
-	//   .flip({
-	//     gasLimit,
-	//     storageDepositLimit
-	//   })
-	//   .signAndSend(alice, async (res) => {
-	//     if (res.status.isInBlock) {
-	//       console.log('in a block')
-	//     } else if (res.status.isFinalized) {
-	//       console.log('finalized')
-	//     }
-	//   });
+
+	// TODO - create amount/transfer input on frontend ???
+	 const bobAddress = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty';
+	 const amount = 10000;
+
+	 const transfer = api.tx.balances.transfer(bobAddress, amount);
+	 await transfer.signAndSend(alice,
+		 async (res) => {
+			    if (res.status.isInBlock) {
+			      console.log('in a block')
+			    } else if (res.status.isFinalized) {
+			      console.log('finalized')
+			    }
+				}
+		);
 }
 
-main();
+main().catch(console.error);
