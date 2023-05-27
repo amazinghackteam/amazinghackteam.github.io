@@ -285,39 +285,34 @@
 
 
 
-		<script>
+  <script>
 
-			const ContractAddress = "5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF65HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6";
-			const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
+    const ContractAddress = "5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF65HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6";
+    const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
 
-			let Contract;
-			let signer;
+    let Contract;
+    let signer;
 
-			const button = document.getElementById( 'connectButton' );
+    const button = document.getElementById('connectButton');
 
-			button.addEventListener( 'click', () =>
-			{
-				if ( window.ethereum )
-				{
-					window.web3 = new Web3( window.ethereum );
-					window.ethereum.enable()
-						.then( ( accounts ) =>
-						{
-							const account = accounts[ 0 ];
-							button.disabled = true;
-							console.log( "Connected to account " + account );
-						} )
-						.catch( ( error ) =>
-						{
-							console.error( error );
-						} );
-				} else
-				{
-					console.log( 'Non browser detected. Consider installing MetaMask!' );
-				}
-			} );
+    button.addEventListener('click', () => {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        window.ethereum.enable()
+          .then((accounts) => {
+            const account = accounts[0];
+            button.disabled = true;
+            console.log("Connected to account " + account);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        console.log('Non browser detected. Consider installing MetaMask!');
+      }
+    });
 
-		</script>
+  </script>
 
 		<script>
 			const getJSON = async function(url)  {
