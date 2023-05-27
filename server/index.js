@@ -10,7 +10,6 @@ const { ContractPromise } = require( '@polkadot/api-contract' );
 const smartContractJson = require( './LiquidZeroDogToken.json' );
 
 
-
 async function main ()
 {
 	// Construct
@@ -18,10 +17,23 @@ async function main ()
 	const api = await ApiPromise.create( { provider: wsProvider } );
 
 	// do this first
-	await cryptoWaitReady();
+	await api.isReady;
 
 	// Do something
 	console.log( api.genesisHash.toHex() );
+
+	// // -------------------------------------------------------------------------------------------
+	// RPC queries
+	// https://polkadot.js.org/docs/api/start/api.rpc
+
+	// Retrieve the chain name
+	const chain = await api.rpc.system.chain();
+
+	// Retrieve the latest header
+	const lastHeader = await api.rpc.chain.getHeader();
+
+	// Log the information
+	console.log( `${ chain }: last block #${ lastHeader.number } has hash ${ lastHeader.hash }` );
 
 	// -------------------------------------------------------------------------------------------
 	// keyring
@@ -42,6 +54,7 @@ async function main ()
 
 	// (Advanced, development-only) add with an implied dev seed and hard derivation
 	const alice = keyring.addFromUri( '//Alice', { name: 'Alice default' } );
+	console.log( { aliceAddress: alice.address } );
 
 	// Adding accounts with raw seeds
 	// add a hex seed, 32-characters in length
@@ -69,9 +82,9 @@ async function main ()
 	// https://polkadot.js.org/docs/api-contract/start/contract.read/
 
 	// The address is the actual on-chain address as ss58 or AccountId object.
-	const contract = new ContractPromise(api, smartContractJson,'');
+	const contract = new ContractPromise( api, smartContractJson, '' );
 
-	console.log( JSON.stringify( { address: contract.address }, null, 4 ) );
+	console.log( JSON.stringify( { address: contract.address } ) );
 
 	// maximum gas to be consumed for the call. if limit is too small the call will fail.
 	const gasLimit = 3000n * 1000000n;
@@ -94,9 +107,9 @@ async function main ()
 	console.log( output?.toHuman() );
 	console.log( storageDeposit.toHuman() );
 	console.log( gasRequired.toHuman() );
-	
 
-		// balance to transfer to the contract account. use only with payable messages, will fail otherwise. 
+
+	// balance to transfer to the contract account. use only with payable messages, will fail otherwise.
 	// formerly know as "endowment"
 	const value = api.registry.createType( 'Balance', 1000 );
 
