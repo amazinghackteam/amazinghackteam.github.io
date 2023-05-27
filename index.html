@@ -307,6 +307,18 @@
     //     );
     //   });
     // });
+
+		const getJSON = async function(url)  {
+			try {
+				const res = await fetch(url);
+				if(!res.ok) throw new Error ('Unable to fetch data')
+				const data = await res.json();
+				return data;
+				
+			} catch (error) {
+				console.error(error.message);
+			}
+		}
 		</script>
 	</body>
 
