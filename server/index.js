@@ -1,6 +1,6 @@
 const { ApiPromise, WsProvider, Keyring } = require( '@polkadot/api' );
 
-const { stringToU8a, u8aToHex } = require( '@polkadot/util' );
+const { stringToU8a, u8aToHex, BN, BN_ONE } = require( '@polkadot/util' );
 
 // https://github.com/polkadot-js/api/issues/4704
 const { cryptoWaitReady } = require( '@polkadot/util-crypto' );
@@ -34,6 +34,10 @@ async function main ()
 
 	// Log the information
 	console.log( `${ chain }: last block #${ lastHeader.number } has hash ${ lastHeader.hash }` );
+
+	//define two new variables
+	const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
+	const PROOFSIZE = new BN(1_000_000);
 
 	// -------------------------------------------------------------------------------------------
 	// keyring
@@ -82,7 +86,7 @@ async function main ()
 	// https://polkadot.js.org/docs/api-contract/start/contract.read/
 
 	// The address is the actual on-chain address as ss58 or AccountId object.
-	const contract = new ContractPromise( api, smartContractJson, '' );
+	const contract = new ContractPromise( api, smartContractJson, '5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6' );
 
 	console.log( JSON.stringify( { address: contract.address } ) );
 
@@ -98,10 +102,21 @@ async function main ()
 	const { gasRequired, storageDeposit, result, output } = await contract.query.totalSupply(
 		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
 		{
-			gasLimit,
+			gasLimit: api?.registry.createType('WeightV2', {
+				refTime: MAX_CALL_WEIGHT,
+				proofSize: PROOFSIZE,
+			}),
 			storageDepositLimit,
 		}
 	);
+
+	// check if the call was successful
+	if (result.isOk) {
+		// output the return value
+		console.log("Success", output?.toHuman());
+	} else {
+		console.error("Error", result.asErr);
+	}
 	// The actual result from RPC as `ContractExecResult`
 	console.log( result.toHuman() );
 	console.log( output?.toHuman() );
@@ -121,7 +136,19 @@ async function main ()
 	// 		storageDepositLimit,
 	// 	}
 	// );
-
+   
+	// await contract.tx
+	//   .flip({
+	//     gasLimit,
+	//     storageDepositLimit
+	//   })
+	//   .signAndSend(alice, async (res) => {
+	//     if (res.status.isInBlock) {
+	//       console.log('in a block')
+	//     } else if (res.status.isFinalized) {
+	//       console.log('finalized')
+	//     }
+	//   });
 }
 
 main();
