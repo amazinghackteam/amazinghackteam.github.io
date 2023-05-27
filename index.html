@@ -53,6 +53,28 @@
 				max-width: 100%;
 			}
 
+			.boxRate {
+				background-color: #EBEBEB;
+				border: 1px solid #000000;
+				box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+				border-radius: 25px;
+				color: #000000;
+				font-size: 40px;
+			}
+
+			.titleSmall {
+				font-size: 25px;
+			}
+			.titleBig {
+				font-size: 70px;
+			}
+
+			.btn {
+				background: #00FF0A;
+				border-radius: 25px;
+				color: #000000;
+			}
+
 		</style>
 	</head>
 
@@ -71,34 +93,43 @@
 			</div>
 		</div>
 
-		<div class="mt-12 flex flex-row">
-			<div class="">
-				<div>Yesterday Exchange Rate</div>
+		<div class="mt-12 flex flex-row justify-center">
+			<div class="boxRate basis-2/6 mr-8 px-12 pt-4 pb-12">
+				<div class="titleSmall mb-8">Yesterday Exchange Rate</div>
 				<div>1 Robot Dog</div>
 				<div>equals</div>
 				<div>2 Rainbow Cat</div>
 			</div>
-			<div>
-				<div>Today Exchange Rate</div>
+			<div class="boxRate basis-2/6 ml-8 px-12 pt-4 pb-12">
+				<div class="titleSmall mb-8">Today Exchange Rate</div>
 				<div>1 Robot Dog</div>
 				<div>equals</div>
 				<div>1 Rainbow Cat</div>
 			</div>
 		</div>
 
-		<div>
-			<div>
-				<div>Yesterday Exchange Rate</div>
+		<div class="mt-12 flex flex-row justify-center">
+			<div class="boxRate basis-2/6 mr-8 px-12 pt-4 pb-12">
+				<div class="titleSmall mb-8">Yesterday Exchange Rate</div>
 				<div>1 Robot Dog</div>
 				<div>equals</div>
 				<div>5 Aleph Zero (AZERO)</div>
 			</div>
-			<div>
-				<div>Today Exchange Rate</div>
+			<div class="boxRate basis-2/6 ml-8 px-12 pt-4 pb-12">
+				<div class="titleSmall mb-8">Today Exchange Rate</div>
 				<div>1 Robot Dog</div>
 				<div>equals</div>
 				<div>7 Aleph Zero (AZERO)</div>
 			</div>
+		</div>
+
+		<div class="my-20 flex flex-col items-center">
+			<div class="titleBig">How to get start trading?</div>
+			<div><button class="btn px-12 py-4 text-lg">Connect your wallet</button></div>
+		</div>
+
+		<div>
+			<div>Robot Dogs For Sell</div>
 		</div>
 
 		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
