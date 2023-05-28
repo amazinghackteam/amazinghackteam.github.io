@@ -368,10 +368,9 @@
       })
     });
 		alert('Transfer success');
-
-    return data;
   } catch (error) {
     console.error('Error:', error);
+		alert('Transfer failed');
   }
 }
 
@@ -382,6 +381,21 @@
 
 		transfer(sender, receiver, amount);
 }
+
+async function getBalance(address) {
+  try {
+		const response = await fetch('http://localhost:3000/balance?address=' + address);
+		const data = await response.json();
+		console.log(data);
+		return data;
+  } catch (error) {
+    console.error('Failed to fetch balance:', error);
+    return null;
+  }
+}
+getBalance('5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp')
+
+
 
   </script>
 

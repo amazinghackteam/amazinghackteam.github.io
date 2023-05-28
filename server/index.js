@@ -1,14 +1,17 @@
 const { ApiPromise, WsProvider } = require( '@polkadot/api' );
 
+const cors = require('cors')
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+
 const { BN, BN_ONE } = require( '@polkadot/util' );
 
 const { ContractPromise } = require( '@polkadot/api-contract' );
 
 const smartContractJson = require( './LiquidZeroDogToken.json' );
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-app.use(bodyParser.json());
 
 async function main ()
 {
@@ -80,17 +83,34 @@ async function main ()
 
 	console.log( 'balanceOf action' );
 
+	async function getBalance(address) {
 	const bof = await contract.query.balanceOf(
-		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+		address,
 		{ gasLimit },
-		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+		address,
 	);
-	console.log( bof.result.toHuman() );
-	console.log( bof.output?.toHuman() );
+
+	console.log( bof.output.toHuman() );
 	console.log( bof.storageDeposit.toHuman() );
 	console.log( bof.gasRequired.toHuman() );
 
+  return {
+    output: bof.output.toHuman(),
+    storageDeposit: bof.storageDeposit.toHuman(),
+    gasRequired: bof.gasRequired.toHuman(),
+  };
+	}
 
+	app.get('/balance/:address', async (req, res) => {
+    try {
+			const { address } = req.params;
+        const result = await getBalance(address);
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred on the server.' });
+    }
+});
 
 	console.log( 'transfer action' );
 
