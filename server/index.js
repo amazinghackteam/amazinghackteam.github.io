@@ -111,6 +111,12 @@ async function main ()
 	console.log( tout.gasRequired.toHuman() );
 	}
 
+	app.get( '/', ( req, res ) =>
+	{
+		console.log( req );
+		return res.json( { status: 'ok' } );
+	} );
+
 	app.get( '/ping', ( req, res ) =>
 	{
 		console.log( req );
