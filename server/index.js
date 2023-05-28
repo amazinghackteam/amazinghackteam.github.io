@@ -117,6 +117,8 @@ async function main ()
     const amount = req.body.amount;
 
 		console.log('sending from frontend', {sender, receiver, amount})
+		//TODO
+		console.log('translate eth address to azero address here on server')
     try {
         const result = await performTransfer(sender, receiver, amount);
         res.json(result);
