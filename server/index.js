@@ -1,9 +1,6 @@
-const { ApiPromise, WsProvider, Keyring } = require( '@polkadot/api' );
+const { ApiPromise, WsProvider } = require( '@polkadot/api' );
 
-const { stringToU8a, u8aToHex, BN, BN_ONE } = require( '@polkadot/util' );
-
-// https://github.com/polkadot-js/api/issues/4704
-const { cryptoWaitReady } = require( '@polkadot/util-crypto' );
+const { BN, BN_ONE } = require( '@polkadot/util' );
 
 const { ContractPromise } = require( '@polkadot/api-contract' );
 
@@ -61,37 +58,24 @@ async function main ()
 	} );
 	console.log( { gasLimit: gasLimit.toHuman() } );
 
-	// a limit to how much Balance to be used to pay for the storage created by the contract call
-	// if null is passed, unlimited balance can be used
-	const storageDepositLimit = null;
-
+	console.log( 'query action list' );
 	const query = await contract.query;
 	console.log( { query } );
 
 
+	console.log( 'totalSuppl action' );
 
-	const { gasRequired, storageDeposit, result, output } = await contract.query.totalSupply(
+	const totalOut = await contract.query.totalSupply(
 		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
 		{ gasLimit }
 	);
-
-	// check if the call was successful
-	if ( result.isOk )
-	{
-		// output the return value
-		console.log( "Success", output?.toHuman() );
-	} else
-	{
-		console.error( "Error", result.asErr );
-	}
-	// The actual result from RPC as `ContractExecResult`
-	console.log( result.toHuman() );
-	console.log( output?.toHuman() );
-	console.log( storageDeposit.toHuman() );
-	console.log( gasRequired.toHuman() );
+	console.log( totalOut.result.toHuman() );
+	console.log( totalOut.output?.toHuman() );
+	console.log( totalOut.storageDeposit.toHuman() );
+	console.log( totalOut.gasRequired.toHuman() );
 
 
-	console.log('balance of action');
+	console.log( 'balanceOf action' );
 
 	const bof = await contract.query.balanceOf(
 		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
@@ -119,39 +103,6 @@ async function main ()
 	console.log( tout.output?.toHuman() );
 	console.log( tout.storageDeposit.toHuman() );
 	console.log( tout.gasRequired.toHuman() );
-
-
-
-	// balance to transfer to the contract account. use only with payable messages, will fail otherwise.
-	// formerly know as "endowment"
-	// const value = api.registry.createType( 'Balance', 1000 );
-
-	// (We perform the send from an account, here using Alice's address)
-	// const { gasRequired, storageDeposit, result, output } = await contract.query.get(
-	// 	newPair.address,
-	// 	{
-	// 		gasLimit,
-	// 		storageDepositLimit,
-	// 	}
-	// );
-
-	// // TODO - create amount/transfer input on frontend ???
-	// const bobAddress = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty';
-	// const amount = 10000;
-
-	// const transfer = api.tx.balances.transfer( bobAddress, amount );
-	// await transfer.signAndSend( alice,
-	// 	async ( res ) =>
-	// 	{
-	// 		if ( res.status.isInBlock )
-	// 		{
-	// 			console.log( 'in a block' );
-	// 		} else if ( res.status.isFinalized )
-	// 		{
-	// 			console.log( 'finalized' );
-	// 		}
-	// 	}
-	// );
 }
 
 main().catch( console.error );
