@@ -111,6 +111,12 @@ async function main ()
 	console.log( tout.gasRequired.toHuman() );
 	}
 
+	app.get( '/ping', ( req, res ) =>
+	{
+		console.log( req );
+		return res.json( {status: 'ok'} );
+	} );
+
 	app.post('/transfer', async (req, res) => {
     const sender = req.body.sender;
     const receiver = req.body.receiver;
