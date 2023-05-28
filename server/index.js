@@ -22,7 +22,7 @@ async function main ()
 	// Do something
 	console.log( api.genesisHash.toHex() );
 
-	// // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
 	// RPC queries
 	// https://polkadot.js.org/docs/api/start/api.rpc
 
@@ -34,49 +34,6 @@ async function main ()
 
 	// Log the information
 	console.log( `${ chain }: last block #${ lastHeader.number } has hash ${ lastHeader.hash }` );
-
-	//define two new variables
-	const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
-	const PROOFSIZE = new BN(1_000_000);
-
-	// -------------------------------------------------------------------------------------------
-	// keyring
-
-	// https://polkadot.js.org/docs/api/start/keyring/
-	const keyring = new Keyring( { type: 'sr25519' } );
-
-	// Adding accounts
-	// Some mnemonic phrase
-	const PHRASE = 'entire material egg meadow latin bargain dutch coral blood melt acoustic thought';
-
-
-	// Add an account, straight mnemonic
-	const newPair = keyring.addFromUri( PHRASE );
-
-	// (Advanced) add an account with a derivation path (hard & soft)
-	const newDeri = keyring.addFromUri( `${ PHRASE }//hard-derived/soft-derived` );
-
-	// (Advanced, development-only) add with an implied dev seed and hard derivation
-	const alice = keyring.addFromUri( '//Alice', { name: 'Alice default' } );
-	console.log( { aliceAddress: alice.address } );
-
-	// Adding accounts with raw seeds
-	// add a hex seed, 32-characters in length
-	const hexPair = keyring.addFromUri( '0x1234567890123456789012345678901234567890123456789012345678901234' );
-
-	// add a string seed, internally this is padded with ' ' to 32-bytes in length
-	const strPair = keyring.addFromUri( 'Janice' );
-
-	// Log some info
-	console.log( `${ alice.meta.name }: has address ${ alice.address } with publicKey [${ alice.publicKey }]` );
-
-	// Convert message, sign and then verify
-	const message = stringToU8a( 'this is our message' );
-	const signature = alice.sign( message );
-	const isValid = alice.verify( message, signature, alice.publicKey );
-
-	// Log info
-	console.log( `The signature ${ u8aToHex( signature ) }, is ${ isValid ? '' : 'in' }valid` );
 
 	// -------------------------------------------------------------------------------------------
 	// Reading contract values
@@ -90,8 +47,20 @@ async function main ()
 
 	console.log( JSON.stringify( { address: contract.address } ) );
 
+	// https://github.com/polkadot-js/api/issues/5255
+	// https://substrate.stackexchange.com/questions/6401/smart-contract-function-call-error
+
+	//define two new variables
+	const MAX_CALL_WEIGHT = new BN( 5_000_000_000_000 ).isub( BN_ONE );
+	const PROOFSIZE = new BN( 1_000_000 );
+
 	// maximum gas to be consumed for the call. if limit is too small the call will fail.
-	const gasLimit = 3000n * 1000000n;
+	const gasLimit = api?.registry.createType( 'WeightV2', {
+		refTime: MAX_CALL_WEIGHT,
+		proofSize: PROOFSIZE,
+	} );
+	console.log( { gasLimit: gasLimit.toHuman() } );
+
 	// a limit to how much Balance to be used to pay for the storage created by the contract call
 	// if null is passed, unlimited balance can be used
 	const storageDepositLimit = null;
@@ -99,23 +68,21 @@ async function main ()
 	const query = await contract.query;
 	console.log( { query } );
 
+
+
 	const { gasRequired, storageDeposit, result, output } = await contract.query.totalSupply(
 		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
-		{
-			gasLimit: api?.registry.createType('WeightV2', {
-				refTime: MAX_CALL_WEIGHT,
-				proofSize: PROOFSIZE,
-			}),
-			storageDepositLimit,
-		}
+		{ gasLimit }
 	);
 
 	// check if the call was successful
-	if (result.isOk) {
+	if ( result.isOk )
+	{
 		// output the return value
-		console.log("Success", output?.toHuman());
-	} else {
-		console.error("Error", result.asErr);
+		console.log( "Success", output?.toHuman() );
+	} else
+	{
+		console.error( "Error", result.asErr );
 	}
 	// The actual result from RPC as `ContractExecResult`
 	console.log( result.toHuman() );
@@ -124,9 +91,40 @@ async function main ()
 	console.log( gasRequired.toHuman() );
 
 
+	console.log('balance of action');
+
+	const bof = await contract.query.balanceOf(
+		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+		{ gasLimit },
+		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+	);
+	console.log( bof.result.toHuman() );
+	console.log( bof.output?.toHuman() );
+	console.log( bof.storageDeposit.toHuman() );
+	console.log( bof.gasRequired.toHuman() );
+
+
+
+	console.log( 'transfer action' );
+
+	const amount = api.registry.createType( 'Balance', 7 );
+
+	const tout = await contract.query.transfer(
+		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+		{ gasLimit },
+		'5FWWf41gG6isBuqVmCaut8ZTMB5fRa2CJ5YV1uXhv7Tfuevm',
+		amount,
+	);
+	console.log( tout.result.toHuman() );
+	console.log( tout.output?.toHuman() );
+	console.log( tout.storageDeposit.toHuman() );
+	console.log( tout.gasRequired.toHuman() );
+
+
+
 	// balance to transfer to the contract account. use only with payable messages, will fail otherwise.
 	// formerly know as "endowment"
-	const value = api.registry.createType( 'Balance', 1000 );
+	// const value = api.registry.createType( 'Balance', 1000 );
 
 	// (We perform the send from an account, here using Alice's address)
 	// const { gasRequired, storageDeposit, result, output } = await contract.query.get(
@@ -137,20 +135,23 @@ async function main ()
 	// 	}
 	// );
 
-	// TODO - create amount/transfer input on frontend ???
-	 const bobAddress = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty';
-	 const amount = 10000;
+	// // TODO - create amount/transfer input on frontend ???
+	// const bobAddress = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty';
+	// const amount = 10000;
 
-	 const transfer = api.tx.balances.transfer(bobAddress, amount);
-	 await transfer.signAndSend(alice,
-		 async (res) => {
-			    if (res.status.isInBlock) {
-			      console.log('in a block')
-			    } else if (res.status.isFinalized) {
-			      console.log('finalized')
-			    }
-				}
-		);
+	// const transfer = api.tx.balances.transfer( bobAddress, amount );
+	// await transfer.signAndSend( alice,
+	// 	async ( res ) =>
+	// 	{
+	// 		if ( res.status.isInBlock )
+	// 		{
+	// 			console.log( 'in a block' );
+	// 		} else if ( res.status.isFinalized )
+	// 		{
+	// 			console.log( 'finalized' );
+	// 		}
+	// 	}
+	// );
 }
 
-main().catch(console.error);
+main().catch( console.error );
