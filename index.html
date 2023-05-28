@@ -385,6 +385,9 @@
 async function getBalance(address) {
   try {
 		const response = await fetch('http://localhost:3000/balance?address=' + address);
+		if(!response.ok) {
+			throw new Error ('Failed to fetch balance')
+		}
 		const data = await response.json();
 		console.log(data);
 		return data;
