@@ -271,7 +271,7 @@
 
 
 		<div class="mx-16 mb-4 titleBig mt-20 pt-10">My Liquidity Pool</div>
-		<div class="flex flex-row mx-4">
+		<div class="flex flex-row mx-4 items-center">
 			<div class="basis-1/4 mr-12 text-center">
 				<div class="mb-2"><img src="img/rainbow_cat_3.png" alt=""></div>
 				<div class="txtBlock">21 dogs / 21 cats</div>
@@ -282,18 +282,26 @@
 			<div class="basis-1/4"></div>
 		</div>
 
+		<div class="mx-16 my-20 pt-10">
+			<div class="titleBig text-center">Collaboration with</div>
+			<div class="flex flex-row justify-center">
+				<div class="w-40 mr-4"><img src="img/alephzero.jpg" alt=""></div>
+				<div class="w-40 ml-4"><img src="img/hackonchain.png" alt=""></div>
+			</div>
+		</div>
+
 
 
 
   <script>
 
-    const ContractAddress = "5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF65HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6";
-    const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
+		const ContractAddress = "5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF65HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6";
+		const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
 
-    let Contract;
-    let signer;
+		let Contract;
+		let signer;
 
-    const button = document.getElementById('connectButton');
+    	const button = document.getElementById('connectButton');
 		const buttons = document.querySelectorAll('.btn');
 
 		function disableButtons() {
@@ -312,32 +320,45 @@
 			})
 		}
 
-		ethereum.request({ method: 'eth_requestAccounts' })
-		.then(account => {
-				const shortAddress = account[0].slice(0, 6) + "..." + account[0].slice(-4);
-			button.innerText = shortAddress;
-			enableButtons();
-		})
-		.catch(() => {
-			disableButtons()
-		});
+		
+		function connectWallet ()
+		{
+			ethereum.request( { method: 'eth_requestAccounts' } )
+				.then( account =>
+				{
+					const shortAddress = account[ 0 ].slice( 0, 6 ) + "..." + account[ 0 ].slice( -4 );
+					button.innerText = 'Your wallet address : ' + shortAddress;
+					enableButtons();
+				} )
+				.catch( () =>
+				{
+					console.log('cannot connect wallet when start the page. End user manually click connect btn');
+				} );
+		}
+
 
     button.addEventListener('click', () => {
+		console.log('click wallet btn');
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         window.ethereum.enable()
           .then((accounts) => {
-            const account = accounts[0];
-            console.log("Connected to account " + account);
+            console.log("Connected to account " + accounts[0]);
+			const shortAddress = accounts[ 0 ].slice( 0, 6 ) + "..." + accounts[ 0 ].slice( -4 );
+			  button.innerText = 'Your wallet address : ' + shortAddress;
+			  enableButtons();
           })
-          .catch((error) => {
-            console.error(error);
+          .catch((err) => {
+            console.error(err);
           });
       } else {
         console.log('Non browser detected. Consider installing MetaMask!');
-				disableButtons();
+		disableButtons();
       }
     });
+
+	// Connect wallet when start on page
+	// connectWallet();
 
   </script>
 
