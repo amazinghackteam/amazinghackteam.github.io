@@ -150,7 +150,7 @@
 			<div class="mr-12 text-center">
 				<div class="mb-4"><img src="img/robot_dog_2.png" alt=""></div>
 				<div class="txtBlock">21 cats (147 AZERO)</div>
-				<div><button class="btn my-2 px-16 py-2 text-lg">Trade</button></div>
+				<div><button id="transferButton" class="btn my-2 px-16 py-2 text-lg">TradeDEMO</button></div>
 			</div>
 			<div class="mr-12 text-center">
 				<div class="mb-4"><img src="img/robot_dog_3.png" alt=""></div>
@@ -294,15 +294,9 @@
 
 
   <script>
-
-		const ContractAddress = "5HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF65HPxrgxXKty68BJNT3RGikEEQNrTmKngTXJLYqGQ62FVcGF6";
-		const ContractABI = "<CONTRACT_ABI eg. [{},{}]>";
-
-		let Contract;
-		let signer;
-
-    	const button = document.getElementById('connectButton');
+    const button = document.getElementById('connectButton');
 		const buttons = document.querySelectorAll('.btn');
+		const transferButton = document.getElementById('transferButton');
 
 		function disableButtons() {
 			buttons.forEach(button => {
@@ -320,7 +314,6 @@
 			})
 		}
 
-		
 		function connectWallet ()
 		{
 			ethereum.request( { method: 'eth_requestAccounts' } )
@@ -359,6 +352,36 @@
 
 	// Connect wallet when start on page
 	connectWallet();
+
+
+	async function transfer(sender, receiver, amount) {
+  try {
+    const response = await fetch('http://localhost:3000/transfer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: sender,
+        receiver: receiver,
+        amount: amount
+      })
+    });
+		alert('Transfer success');
+
+    return data;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+	transferButton.onclick = function() {
+		let sender = 		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp'
+  	let receiver = '5FWWf41gG6isBuqVmCaut8ZTMB5fRa2CJ5YV1uXhv7Tfuevm'
+		let amount = 100;
+
+		transfer(sender, receiver, amount);
+}
 
   </script>
 

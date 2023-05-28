@@ -5,7 +5,10 @@ const { BN, BN_ONE } = require( '@polkadot/util' );
 const { ContractPromise } = require( '@polkadot/api-contract' );
 
 const smartContractJson = require( './LiquidZeroDogToken.json' );
-
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.json());
 
 async function main ()
 {
@@ -92,17 +95,41 @@ async function main ()
 	console.log( 'transfer action' );
 
 	const amount = api.registry.createType( 'Balance', 7 );
+	// '5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+	// 	'5FWWf41gG6isBuqVmCaut8ZTMB5fRa2CJ5YV1uXhv7Tfuevm',
 
+	async function performTransfer(sender, receiver, amount) {
 	const tout = await contract.query.transfer(
-		'5FByQK5rfjhwNziJWj8dkdPwMZd4Y6AMfB4R5mf1PApPGbZp',
+		sender,
 		{ gasLimit },
-		'5FWWf41gG6isBuqVmCaut8ZTMB5fRa2CJ5YV1uXhv7Tfuevm',
+		receiver,
 		amount,
 	);
 	console.log( tout.result.toHuman() );
 	console.log( tout.output?.toHuman() );
 	console.log( tout.storageDeposit.toHuman() );
 	console.log( tout.gasRequired.toHuman() );
+	}
+
+	app.post('/transfer', async (req, res) => {
+    const sender = req.body.sender;
+    const receiver = req.body.receiver;
+    const amount = req.body.amount;
+
+		console.log('sending from frontend', {sender, receiver, amount})
+    try {
+        const result = await performTransfer(sender, receiver, amount);
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred during the transfer.' });
+    }
+});
 }
 
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
 main().catch( console.error );
+
